@@ -15,6 +15,9 @@ model User {
   refreshToken String?
   createdAt DateTime @default(now())
   BP        BloodPressureRecord[]
+  foodLogs  FoodLog[]
+  medicationLogs MedicationLog[]
+  medicationAlarms MedicationAlarm[]
 }
 
 model BloodPressureRecord {
@@ -32,6 +35,7 @@ model Food {
   sodiumLevel String?
   potassium   String?
   category    String?
+  logs        FoodLog[]
 }
 
 model FoodLog {
@@ -49,6 +53,8 @@ model Medication {
   name         String
   dosage       String
   instructions String?
+  alarms       MedicationAlarm[]
+  logs         MedicationLog[]
 }
 
 model MedicationAlarm {
@@ -57,6 +63,9 @@ model MedicationAlarm {
   alarmTime  String
   daysOfWeek String
   active     Boolean  @default(true)
+  medication Medication @relation(fields: [medicationId], references: [id])
+  userId     Int?
+  user       User?     @relation(fields: [userId], references: [id])
 }
 
 model MedicationLog {
@@ -64,4 +73,7 @@ model MedicationLog {
   medicationId Int
   takenAt      DateTime
   status       String
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
 }
