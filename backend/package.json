@@ -6,7 +6,11 @@
     "start:dev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
-    "prisma": "prisma"
+    "prisma": "prisma",
+    "test": "jest --runInBand",
+    "test:unit": "jest --runInBand --testPathPatterns=src/.*\\.spec\\.ts$",
+    "test:e2e": "jest --runInBand --testPathPatterns=test/.*\\.spec\\.ts$",
+    "test:watch": "jest --watchAll"
   },
   "dependencies": {
     "@nestjs/common": "10.0.0",
