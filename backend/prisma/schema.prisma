@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  refreshToken String?
+  createdAt DateTime @default(now())
+  BP        BloodPressureRecord[]
+}
+
+model BloodPressureRecord {
+  id         Int      @id @default(autoincrement())
+  systolic   Int
+  diastolic  Int
+  measuredAt DateTime
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Food {
+  id          Int     @id @default(autoincrement())
+  name        String
+  sodiumLevel String?
+  potassium   String?
+  category    String?
+}
+
+model FoodLog {
+  id         Int      @id @default(autoincrement())
+  foodId     Int
+  portion    String
+  consumedAt DateTime
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  food       Food     @relation(fields: [foodId], references: [id])
+}
+
+model Medication {
+  id           Int      @id @default(autoincrement())
+  name         String
+  dosage       String
+  instructions String?
+}
+
+model MedicationAlarm {
+  id         Int      @id @default(autoincrement())
+  medicationId Int
+  alarmTime  String
+  daysOfWeek String
+  active     Boolean  @default(true)
+}
+
+model MedicationLog {
+  id           Int      @id @default(autoincrement())
+  medicationId Int
+  takenAt      DateTime
+  status       String
+}
