@@ -1,46 +1,53 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { clearAuth, getUserName, isAuthenticated } from '../utils/auth'
 
 export default function Dashboard() {
   const router = useRouter()
   const [ready, setReady] = useState(false)
+  const [name, setName] = useState('')
 
   useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null
-    if (!token) {
+    if (!isAuthenticated()) {
       router.replace('/')
       return
     }
+    setName(getUserName() || '')
     setReady(true)
   }, [])
 
   const handleLogout = async () => {
-    try {
-      // Clear tokens locally; backend logout endpoint requires Auth header and proxy support.
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
-    } finally {
-      router.replace('/')
-    }
+    clearAuth()
+    router.replace('/')
   }
 
   if (!ready) return <p style={{ padding: 24 }}>Comprobando sesión...</p>
 
   return (
     <main style={{ padding: 24, fontFamily: 'Arial, sans-serif' }}>
-      <h1>Dashboard</h1>
-      <p>Bienvenido — estás autenticado.</p>
+      <h1>Bienvenido{ name ? `, ${name}` : '' }</h1>
+      <p>En AppHiper puedes registrar presión arterial, alimentos, medicinas y ver tu progreso.</p>
 
-      <section style={{ marginTop: 20 }}>
-        <button onClick={() => router.push('/blood-pressure')} style={{ marginRight: 8 }}>Presión arterial</button>
-        <button onClick={() => router.push('/foods')} style={{ marginRight: 8 }}>Alimentos</button>
-        <button onClick={() => router.push('/food-logs')} style={{ marginRight: 8 }}>Registro consumo</button>
-        <button onClick={() => router.push('/medications')} style={{ marginRight: 8 }}>Medicamentos</button>
+      <section style={{ display: 'grid', gap: 12, maxWidth: 560, marginTop: 24 }}>
+        <button onClick={() => router.push('/blood-pressure')} style={cardButton}>Presión arterial</button>
+        <button onClick={() => router.push('/foods')} style={cardButton}>Catálogo de alimentos</button>
+        <button onClick={() => router.push('/food-logs')} style={cardButton}>Registro de consumo</button>
+        <button onClick={() => router.push('/medications')} style={cardButton}>Medicamentos</button>
       </section>
 
       <section style={{ marginTop: 32 }}>
-        <button onClick={handleLogout} style={{ background: '#ef4444', color: '#fff', padding: '8px 12px', borderRadius: 6, border: 'none' }}>Cerrar sesión</button>
+        <button onClick={handleLogout} style={{ ...cardButton, background: '#ef4444' }}>Cerrar sesión</button>
       </section>
     </main>
   )
+}
+
+const cardButton = {
+  padding: '16px 20px',
+  borderRadius: 12,
+  border: 'none',
+  background: '#0ea5a4',
+  color: '#fff',
+  cursor: 'pointer',
+  textAlign: 'left',
 }
