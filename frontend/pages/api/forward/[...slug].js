@@ -1,6 +1,3 @@
-import * as dotenv from 'dotenv'
-dotenv.config()
-
 const BACKEND_URLS = [process.env.BACKEND_URL || 'http://localhost:3001', 'http://127.0.0.1:3001']
 
 export default async function handler(req, res) {
@@ -20,10 +17,10 @@ export default async function handler(req, res) {
       const backendRes = await fetch(`${base}/${path}`, { method, headers, body })
       const data = await backendRes.text()
       res.status(backendRes.status)
-      backendRes.headers.forEach((v, k) => {
-        if (k.toLowerCase() === 'transfer-encoding') return
+      for (const [k, v] of backendRes.headers.entries()) {
+        if (k.toLowerCase() === 'transfer-encoding') continue
         res.setHeader(k, v)
-      })
+      }
       return res.send(data)
     } catch (e) {
       lastErr = e

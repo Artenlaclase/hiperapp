@@ -9,6 +9,7 @@ export default function Home() {
   const [form, setForm] = useState(initialForm)
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -44,7 +45,6 @@ export default function Home() {
         if (mode === 'login' && data.accessToken) {
           try {
             localStorage.setItem('accessToken', data.accessToken)
-            if (data.refreshToken) localStorage.setItem('refreshToken', data.refreshToken)
             const payload = decodeJwt(data.accessToken)
             if (payload?.sub) localStorage.setItem('userId', String(payload.sub))
           } catch (e) {

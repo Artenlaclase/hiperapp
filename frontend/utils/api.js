@@ -12,23 +12,20 @@ export async function decodeJwt(token) {
 }
 
 async function refreshTokens() {
-  const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null
-  if (!refreshToken || !userId) return false
+  if (!userId) return false
   try {
     const res = await fetch('/api/auth/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: Number(userId), refreshToken }),
+      body: JSON.stringify({ userId: Number(userId) }),
     })
     if (!res.ok) return false
     const data = await res.json()
     if (data.accessToken) {
       localStorage.setItem('accessToken', data.accessToken)
     }
-    if (data.refreshToken) {
-      localStorage.setItem('refreshToken', data.refreshToken)
-    }
+    // refreshToken is stored in httpOnly cookie by backend; don't store it in JS
     return true
   } catch (e) {
     console.warn('refreshTokens failed', e)
