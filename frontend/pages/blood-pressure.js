@@ -10,19 +10,9 @@ function classifyPressure(systolic, diastolic) {
   return { label: 'Controlada', color: 'var(--color-success)' }
 }
 
-function nowDate() {
-  const d = new Date()
-  return d.toISOString().slice(0, 10)
-}
-
-function nowTime() {
-  const d = new Date()
-  return d.toTimeString().slice(0, 5)
-}
-
 export default function BloodPressurePage() {
   const [list, setList] = useState([])
-  const [form, setForm] = useState({ systolic: '', diastolic: '', date: nowDate(), time: nowTime() })
+  const [form, setForm] = useState({ systolic: '', diastolic: '', measuredAt: '' })
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -43,11 +33,10 @@ export default function BloodPressurePage() {
     e.preventDefault()
     setLoading(true)
     setMessage('')
-    const measuredAt = `${form.date}T${form.time}`
     const payload = {
       systolic: Number(form.systolic),
       diastolic: Number(form.diastolic),
-      measuredAt,
+      measuredAt: form.measuredAt,
       userId: Number(getUserId()),
     }
 
@@ -80,10 +69,7 @@ export default function BloodPressurePage() {
         <form onSubmit={submit} style={{ display: 'grid', gap: 14, marginBottom: 20, padding: 18, background: 'var(--color-surface)', borderRadius: 20, boxShadow: '0 14px 32px rgba(0,0,0,0.06)' }}>
           <input placeholder="Sistólica" value={form.systolic} onChange={(e) => setForm({ ...form, systolic: e.target.value })} required />
           <input placeholder="Diastólica" value={form.diastolic} onChange={(e) => setForm({ ...form, diastolic: e.target.value })} required />
-          <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr' }}>
-            <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required />
-            <input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} required />
-          </div>
+          <input placeholder="YYYY-MM-DD HH:mm:ss" value={form.measuredAt} onChange={(e) => setForm({ ...form, measuredAt: e.target.value })} required />
           <button type="submit" disabled={loading} style={submitStyle}>{loading ? 'Guardando...' : 'Agregar medición'}</button>
         </form>
 
