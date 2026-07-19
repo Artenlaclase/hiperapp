@@ -6,7 +6,7 @@ import { queueAction, syncQueue } from '../utils/sync'
 export default function FoodLogsPage() {
   const [list, setList] = useState([])
   const [foods, setFoods] = useState([])
-  const [form, setForm] = useState({ foodId: '', portion: '', consumedAt: '' })
+  const [form, setForm] = useState({ foodId: '', portion: '', date: new Date().toISOString().slice(0, 10), time: new Date().toTimeString().slice(0, 5) })
   const [message, setMessage] = useState('')
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function FoodLogsPage() {
     const payload = {
       foodId: Number(form.foodId),
       portion: form.portion,
-      consumedAt: form.consumedAt,
+      consumedAt: `${form.date}T${form.time}`,
       userId: Number(getUserId()),
     }
 
@@ -82,10 +82,16 @@ export default function FoodLogsPage() {
             Porción
             <input placeholder="Porción" value={form.portion} onChange={(e)=>setForm({...form, portion:e.target.value})} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
           </label>
-          <label style={{ display: 'grid', gap: 8 }}>
-            Fecha y hora
-            <input placeholder="YYYY-MM-DD HH:mm:ss" value={form.consumedAt} onChange={(e)=>setForm({...form, consumedAt:e.target.value})} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
-          </label>
+          <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr' }}>
+            <label style={{ display: 'grid', gap: 8 }}>
+              Fecha
+              <input type="date" value={form.date} onChange={(e)=>setForm({...form, date:e.target.value})} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
+            </label>
+            <label style={{ display: 'grid', gap: 8 }}>
+              Hora
+              <input type="time" value={form.time} onChange={(e)=>setForm({...form, time:e.target.value})} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
+            </label>
+          </div>
           <button type="submit" style={buttonStyle}>Agregar consumo</button>
         </form>
 

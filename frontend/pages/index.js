@@ -62,14 +62,6 @@ export default function Home() {
 
   return (
     <main style={{ padding: 32, maxWidth: 760, margin: '0 auto', background: 'var(--color-bg)', minHeight: '100vh' }}>
-      <section style={{ display: 'grid', placeItems: 'center', gap: 20, marginBottom: 32, textAlign: 'center' }}>
-        <img src="/logo_app.png" alt="AppHiper logo" style={{ width: 96, borderRadius: 24, border: '1px solid rgba(44,118,153,0.12)', background: 'white' }} />
-        <div>
-          <h1 style={{ margin: 0, color: 'var(--color-primary)' }}>AppHiper</h1>
-          <p style={{ color: 'var(--color-muted)', maxWidth: 560, margin: '12px auto 0' }}>Registra tu salud cardiovascular con calma, accede a tus estadísticas y usa la app como PWA.</p>
-        </div>
-      </section>
-
       <section style={{ background: 'var(--color-surface)', padding: 28, borderRadius: 20, boxShadow: '0 18px 44px rgba(0,0,0,0.06)' }}>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 24 }}>
           <button type="button" onClick={() => setMode('login')} style={buttonMode('login', mode)}>Login</button>
