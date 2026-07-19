@@ -53,9 +53,31 @@ export default function Home() {
         if (data.error && !data.id) {
           setMessage(data.message || data.error || 'Error en el registro')
         } else {
-          setMessage('Usuario registrado. Inicia sesión.')
-          setMode('login')
-          setForm(initialForm)
+          // Registro exitoso → login automático
+          setMessage('✅ Cuenta creada. Iniciando sesión...')
+          try {
+            const loginRes = await apiFetch('auth/login', {
+              method: 'POST',
+              body: JSON.stringify({ email: form.email, password: form.password }),
+            })
+            const loginData = await loginRes.json()
+            if (loginRes.ok && loginData.accessToken) {
+              setAccessToken(loginData.accessToken)
+              const decoded = decodeJwt(loginData.accessToken)
+              if (decoded?.sub) setUserId(decoded.sub)
+              setUserName(form.name || decoded?.name || decoded?.email || '')
+              router.push('/dashboard')
+            } else {
+              // Si el auto-login falla, llevar al form de login con email pre-rellenado
+              setMode('login')
+              setForm((prev) => ({ ...initialForm, email: form.email }))
+              setMessage('Cuenta creada. Ingresa tu contraseña para continuar.')
+            }
+          } catch {
+            setMode('login')
+            setForm((prev) => ({ ...initialForm, email: form.email }))
+            setMessage('Cuenta creada. Inicia sesión para continuar.')
+          }
         }
       }
     } catch (error) {
