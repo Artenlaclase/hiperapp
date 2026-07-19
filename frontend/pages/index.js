@@ -38,7 +38,7 @@ export default function Home() {
       const data = await response.json()
 
       if (!response.ok) {
-        setMessage(data.error || data.message || 'Error en la petición')
+        setMessage(data.message || data.error || 'Error en la petición')
       } else if (mode === 'login') {
         if (data.accessToken) {
           setAccessToken(data.accessToken)
@@ -47,11 +47,11 @@ export default function Home() {
           setUserName(form.name || payload?.name || payload?.email || '')
           router.push('/dashboard')
         } else {
-          setMessage(data.error || data.message || 'Error en la petición')
+          setMessage(data.message || data.error || 'Error en la petición')
         }
       } else {
-        if (data.error) {
-          setMessage(data.error || data.message || 'Error en el registro')
+        if (data.error && !data.id) {
+          setMessage(data.message || data.error || 'Error en el registro')
         } else {
           setMessage('Usuario registrado. Inicia sesión.')
           setMode('login')

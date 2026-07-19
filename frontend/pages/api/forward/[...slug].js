@@ -6,8 +6,10 @@ export default async function handler(req, res) {
   const method = req.method
 
   const headers = { ...req.headers }
-  // Remove host header to avoid issues
+  // Remove host and transfer/length headers to avoid issues
   delete headers.host
+  delete headers['content-length']
+  delete headers.connection
 
   const body = ['GET', 'HEAD'].includes(method) ? undefined : JSON.stringify(req.body)
 
