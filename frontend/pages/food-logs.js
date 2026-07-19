@@ -3,6 +3,16 @@ import apiFetch from '../utils/api'
 import { getUserId } from '../utils/auth'
 import { queueAction, syncQueue } from '../utils/sync'
 
+function getCurrentLocalDateTime() {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export default function FoodLogsPage() {
   const [list, setList] = useState([])
   const [foods, setFoods] = useState([])
@@ -11,6 +21,7 @@ export default function FoodLogsPage() {
 
   useEffect(() => {
     load()
+    setForm((prev) => ({ ...prev, consumedAt: getCurrentLocalDateTime() }))
     window.addEventListener('online', syncQueue)
     return () => window.removeEventListener('online', syncQueue)
   }, [])
@@ -44,14 +55,14 @@ export default function FoodLogsPage() {
     const payload = {
       foodId: Number(form.foodId),
       portion: form.portion,
-      consumedAt: form.consumedAt,
+      consumedAt: form.consumedAt ? form.consumedAt.replace('T', ' ') + ':00' : '',
       userId: Number(getUserId()),
     }
 
     try {
       const res = await apiFetch('food-logs', { method: 'POST', body: JSON.stringify(payload) })
       if (res.ok) {
-        setForm({ foodId: '', portion: '', consumedAt: '' })
+        setForm({ foodId: '', portion: '', consumedAt: getCurrentLocalDateTime() })
         await load()
       } else {
         const data = await res.json()

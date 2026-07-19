@@ -10,6 +10,16 @@ function classifyPressure(systolic, diastolic) {
   return { label: 'Controlada', color: 'var(--color-success)' }
 }
 
+function getCurrentLocalDateTime() {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export default function BloodPressurePage() {
   const [list, setList] = useState([])
   const [form, setForm] = useState({ systolic: '', diastolic: '', measuredAt: '' })
@@ -18,6 +28,7 @@ export default function BloodPressurePage() {
 
   useEffect(() => {
     load()
+    setForm((prev) => ({ ...prev, measuredAt: getCurrentLocalDateTime() }))
     window.addEventListener('online', syncQueue)
     return () => window.removeEventListener('online', syncQueue)
   }, [])
@@ -36,7 +47,7 @@ export default function BloodPressurePage() {
     const payload = {
       systolic: Number(form.systolic),
       diastolic: Number(form.diastolic),
-      measuredAt: form.measuredAt,
+      measuredAt: form.measuredAt ? form.measuredAt.replace('T', ' ') + ':00' : '',
       userId: Number(getUserId()),
     }
 
@@ -47,7 +58,7 @@ export default function BloodPressurePage() {
       })
       if (res.ok) {
         await load()
-        setForm({ systolic: '', diastolic: '', measuredAt: '' })
+        setForm({ systolic: '', diastolic: '', measuredAt: getCurrentLocalDateTime() })
       } else {
         const data = await res.json()
         setMessage(data.error || 'Error al guardar')
@@ -67,9 +78,12 @@ export default function BloodPressurePage() {
         <p style={{ color: 'var(--color-muted)' }}>Registra tus mediciones y consulta tu historial con un semáforo de estado.</p>
 
         <form onSubmit={submit} style={{ display: 'grid', gap: 14, marginBottom: 20, padding: 18, background: 'var(--color-surface)', borderRadius: 20, boxShadow: '0 14px 32px rgba(0,0,0,0.06)' }}>
-          <input placeholder="Sistólica" value={form.systolic} onChange={(e) => setForm({ ...form, systolic: e.target.value })} required />
-          <input placeholder="Diastólica" value={form.diastolic} onChange={(e) => setForm({ ...form, diastolic: e.target.value })} required />
-          <input placeholder="YYYY-MM-DD HH:mm:ss" value={form.measuredAt} onChange={(e) => setForm({ ...form, measuredAt: e.target.value })} required />
+          <input placeholder="Sistólica (ej: 120)" value={form.systolic} onChange={(e) => setForm({ ...form, systolic: e.target.value })} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
+          <input placeholder="Diastólica (ej: 80)" value={form.diastolic} onChange={(e) => setForm({ ...form, diastolic: e.target.value })} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
+          <label style={{ display: 'grid', gap: 6, color: 'var(--color-text)', fontWeight: 600 }}>
+            Fecha y hora de la medición
+            <input type="datetime-local" value={form.measuredAt} onChange={(e) => setForm({ ...form, measuredAt: e.target.value })} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
+          </label>
           <button type="submit" disabled={loading} style={submitStyle}>{loading ? 'Guardando...' : 'Agregar medición'}</button>
         </form>
 

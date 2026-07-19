@@ -16,6 +16,11 @@ export class MedicationsController {
     return this.medsService.findAll();
   }
 
+  @Get('user/:userId')
+  findByUser(@Param('userId') userId: string) {
+    return this.medsService.findAllByUser(Number(userId));
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medsService.findOne(Number(id));
@@ -29,5 +34,26 @@ export class MedicationsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.medsService.remove(Number(id));
+  }
+
+  @Post(':id/alarms')
+  createAlarm(@Param('id') medicationId: string, @Body() body: { alarmTime: string, daysOfWeek: string, userId?: number }) {
+    return this.medsService.createAlarm(Number(medicationId), body);
+  }
+
+  @Put(':medicationId/alarms/:alarmId')
+  updateAlarm(@Param('medicationId') medicationId: string, @Param('alarmId') alarmId: string, @Body() body: any) {
+    return this.medsService.updateAlarm(Number(alarmId), body);
+  }
+
+  @Delete(':medicationId/alarms/:alarmId')
+  removeAlarm(@Param('medicationId') medicationId: string, @Param('alarmId') alarmId: string) {
+    return this.medsService.removeAlarm(Number(alarmId));
+  }
+
+  @Post(':id/logs')
+  createLog(@Param('id') medicationId: string, @Body() body: { userId: number, takenAt?: string, status: string }) {
+    const takenAt = body.takenAt ? new Date(body.takenAt) : new Date();
+    return this.medsService.createLog(Number(medicationId), Number(body.userId), takenAt, body.status);
   }
 }
