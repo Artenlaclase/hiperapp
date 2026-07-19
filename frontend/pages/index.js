@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { decodeJwt } from '../utils/api'
 
 const initialForm = { name: '', email: '', password: '' }
 
@@ -38,6 +40,22 @@ export default function Home() {
         setMessage(data.error || 'Error en la petición')
       } else {
         setMessage(`Éxito: ${mode === 'register' ? 'Usuario creado' : 'Login correcto'}`)
+        // Si es login, guardar tokens y redirigir al dashboard
+        if (mode === 'login' && data.accessToken) {
+          try {
+            localStorage.setItem('accessToken', data.accessToken)
+            if (data.refreshToken) localStorage.setItem('refreshToken', data.refreshToken)
+            const payload = decodeJwt(data.accessToken)
+            if (payload?.sub) localStorage.setItem('userId', String(payload.sub))
+          } catch (e) {
+            console.warn('No se pudo guardar token en localStorage', e)
+          }
+          router.push('/dashboard')
+        }
+        // Si es registro, volver al modo login para que el usuario entre
+        if (mode === 'register') {
+          setMode('login')
+        }
       }
     } catch (error) {
       console.error(error)
