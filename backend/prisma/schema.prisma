@@ -8,16 +8,27 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  age          Int?
+  gender       String?
+  weight       Float?
+  height       Float?
+  activityLevel String?
+  htaLevel     String? @map("hta_level")
   refreshToken String?
-  createdAt DateTime @default(now())
-  BP        BloodPressureRecord[]
-  foodLogs  FoodLog[]
-  medicationLogs MedicationLog[]
-  medicationAlarms MedicationAlarm[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  BP                BloodPressureRecord[]
+  foodLogs          FoodLog[]
+  mealPlans         MealPlan[]
+  medications       Medication[]
+  medicationLogs    MedicationLog[]
+  medicationAlarms  MedicationAlarm[]
+  habitLogs         HabitLog[]
 }
 
 model BloodPressureRecord {
@@ -27,14 +38,16 @@ model BloodPressureRecord {
   measuredAt DateTime
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 model Food {
   id          Int     @id @default(autoincrement())
   name        String
-  sodiumLevel String?
-  potassium   String?
+  sodiumLevel String? @map("sodium_level")
+  potassium   String? @map("potassium_level")
   category    String?
+  createdAt   DateTime @default(now())
   logs        FoodLog[]
 }
 
@@ -46,6 +59,16 @@ model FoodLog {
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
   food       Food     @relation(fields: [foodId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model MealPlan {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  weekStart DateTime @map("week_start")
+  notes     String?
+  createdAt DateTime @default(now())
 }
 
 model Medication {
@@ -55,6 +78,9 @@ model Medication {
   instructions String?
   alarms       MedicationAlarm[]
   logs         MedicationLog[]
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
 }
 
 model MedicationAlarm {
@@ -66,6 +92,7 @@ model MedicationAlarm {
   medication Medication @relation(fields: [medicationId], references: [id])
   userId     Int?
   user       User?     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 model MedicationLog {
@@ -76,4 +103,34 @@ model MedicationLog {
   medication   Medication @relation(fields: [medicationId], references: [id])
   userId       Int
   user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime @default(now())
 }
+
+model EducationalContent {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  topic     String?
+  level     String?
+  createdAt DateTime @default(now())
+}
+
+model Habit {
+  id        Int      @id @default(autoincrement())
+  name      String
+  description String?
+  createdAt DateTime @default(now())
+  habitLogs HabitLog[]
+}
+
+model HabitLog {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  habitId    Int
+  user       User     @relation(fields: [userId], references: [id])
+  habit      Habit    @relation(fields: [habitId], references: [id])
+  completedAt DateTime
+  createdAt  DateTime @default(now())
+}
+
+
