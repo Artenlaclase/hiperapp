@@ -1,2 +1,25 @@
-html,body,#__next{height:100%;}
-body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+:root {
+  --color-primary: #2C7699;
+  --color-success: #5CB85C;
+  --color-alert: #D9534F;
+  --color-bg: #F9F9F9;
+  --color-surface: #ffffff;
+  --color-text: #1F2937;
+  --color-muted: #4B5563;
+  --color-border: rgba(44, 118, 153, 0.16);
+}
+
+html, body, #__next {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+button, input, textarea, select {
+  font: inherit;
+}

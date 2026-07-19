@@ -12,18 +12,27 @@ export default function FoodsPage() {
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: 'Arial, sans-serif', background: '#F9F9F9', minHeight: '100vh' }}>
+    <main style={{ padding: 24, fontFamily: 'Arial, sans-serif', background: 'var(--color-bg)', minHeight: '100vh' }}>
       <section style={{ maxWidth: 760, margin: '0 auto' }}>
-        <h1 style={{ color: '#2C7699' }}>Catálogo de alimentos</h1>
-        <button onClick={load} style={buttonStyle}>Recargar</button>
-        <div style={{ marginTop: 20, display: 'grid', gap: 14 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, marginBottom: 24 }}>
+          <div>
+            <h1 style={{ margin: 0, color: 'var(--color-primary)' }}>Catálogo de alimentos</h1>
+            <p style={{ margin: '8px 0 0', color: 'var(--color-muted)' }}>Consulta tus alimentos y sus valores clave.</p>
+          </div>
+          <button onClick={load} style={buttonStyle}>Recargar</button>
+        </div>
+
+        <div style={{ display: 'grid', gap: 16 }}>
           {list.map((f) => (
             <article key={f.id} style={foodCard}>
-              <h2 style={{ margin: 0, color: '#1f2937' }}>{f.name}</h2>
-              <p style={{ margin: '8px 0 0', color: '#4b5563' }}>{f.category || 'Categoría no definida'}</p>
-              <div style={{ marginTop: 10, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <span style={tagStyle}>{f.sodiumLevel ? `Sodio: ${f.sodiumLevel}` : 'Sodio: N/D'}</span>
-                <span style={tagStyle}>{f.potassium ? `Potasio: ${f.potassium}` : 'Potasio: N/D'}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+                <h2 style={{ margin: 0, color: 'var(--color-text)' }}>{f.name}</h2>
+                <span style={{ ...tagStyle, background: 'rgba(92,184,92,0.12)', color: 'var(--color-success)' }}>{f.category || 'Sin categoría'}</span>
+              </div>
+              <p style={{ margin: '10px 0 0', color: 'var(--color-muted)' }}>{f.description || 'Descripción no disponible'}</p>
+              <div style={{ marginTop: 12, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <span style={infoTag}>{f.sodiumLevel ? `Sodio: ${f.sodiumLevel}` : 'Sodio: N/D'}</span>
+                <span style={infoTag}>{f.potassium ? `Potasio: ${f.potassium}` : 'Potasio: N/D'}</span>
               </div>
             </article>
           ))}
@@ -33,6 +42,7 @@ export default function FoodsPage() {
   )
 }
 
-const buttonStyle = { padding: '10px 16px', borderRadius: 10, border: 'none', background: '#2C7699', color: '#fff', cursor: 'pointer' }
-const foodCard = { background: '#ffffff', padding: 18, borderRadius: 16, boxShadow: '0 12px 24px rgba(0,0,0,0.05)' }
-const tagStyle = { padding: '6px 10px', borderRadius: 999, background: '#eef6f9', color: '#2C7699', fontSize: 12 }
+const buttonStyle = { padding: '10px 16px', borderRadius: 12, border: 'none', background: 'var(--color-primary)', color: '#fff', cursor: 'pointer' }
+const foodCard = { background: 'var(--color-surface)', padding: 20, borderRadius: 20, boxShadow: '0 16px 32px rgba(0,0,0,0.06)' }
+const tagStyle = { padding: '6px 12px', borderRadius: 999, fontSize: 12, fontWeight: 700 }
+const infoTag = { padding: '8px 12px', borderRadius: 999, background: '#f3f8fb', color: 'var(--color-primary)', fontSize: 12 }
