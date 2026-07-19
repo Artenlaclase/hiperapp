@@ -1,4 +1,4 @@
-export async function decodeJwt(token) {
+export function decodeJwt(token) {
   if (!token) return null
   try {
     const parts = token.split('.')
