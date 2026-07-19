@@ -124,3 +124,112 @@ button, input, textarea, select {
     text-align: center;
   }
 }
+
+/* Alarm Modal styles */
+.alarm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.alarm-modal {
+  background: var(--color-surface);
+  border-radius: 24px;
+  padding: 28px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.alarm-modal-title {
+  color: var(--color-alert);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.alarm-modal-med {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+
+.alarm-modal-dosage {
+  font-size: 16px;
+  color: var(--color-primary);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.alarm-modal-inst {
+  font-size: 14px;
+  color: var(--color-muted);
+  background: rgba(44, 118, 153, 0.05);
+  padding: 12px;
+  border-radius: 12px;
+  margin: 0 0 24px;
+}
+
+.alarm-modal-btn-take {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: var(--color-success);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(92, 184, 92, 0.3);
+  transition: all 0.2s ease;
+}
+
+.alarm-modal-btn-take:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(92, 184, 92, 0.4);
+}
+
+.alarm-modal-btn-close {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: var(--color-muted);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alarm-modal-btn-close:hover {
+  background: #f3f4f6;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

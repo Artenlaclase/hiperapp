@@ -95,7 +95,7 @@ export default function FoodLogsPage() {
           </label>
           <label style={{ display: 'grid', gap: 8 }}>
             Fecha y hora
-            <input placeholder="YYYY-MM-DD HH:mm:ss" value={form.consumedAt} onChange={(e)=>setForm({...form, consumedAt:e.target.value})} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
+            <input type="datetime-local" value={form.consumedAt} onChange={(e)=>setForm({...form, consumedAt:e.target.value})} required style={{ padding: 12, borderRadius: 12, border: '1px solid #d1d5db' }} />
           </label>
           <button type="submit" style={buttonStyle}>Agregar consumo</button>
         </form>
