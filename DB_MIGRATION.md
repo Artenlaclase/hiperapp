@@ -1,16 +1,17 @@
-# Plan de migración de base de datos: MySQL → PostgreSQL
+# Plan de migración de base de datos: MySQL → Supabase (PostgreSQL)
 
-Objetivo: migrar la base de datos actual (MySQL) hacia PostgreSQL y dejar el backend usando Prisma apuntando a PostgreSQL.
+Objetivo: migrar la base de datos actual (MySQL) hacia Supabase PostgreSQL y dejar el backend usando Prisma apuntando a la conexión Supabase.
 
 Estado actual:
 - `backend/prisma/schema.prisma` configurado con `provider = "postgresql"`.
 
-Pasos recomendados (ejecutar en entorno local con acceso a las bases de datos):
+Pasos recomendados (ejecutar con acceso a la instancia de Supabase y las credenciales de MySQL):
 
-1) Preparar entorno PostgreSQL
+1) Preparar entorno Supabase
 
-  - Instalar Postgres local o usar instancia gestionada.
-  - Crear base de datos y usuario: `apphiper`.
+  - Crear un proyecto en Supabase.
+  - En el dashboard de Supabase, copiar el `DATABASE_URL` PostgreSQL.
+  - Asegurar que el esquema objetivo sea `public` o la configuración usada en Supabase.
 
 2) Exportar datos desde MySQL
 
@@ -32,9 +33,9 @@ Pasos recomendados (ejecutar en entorno local con acceso a las bases de datos):
 - Revisar `enum` y convertir a `CHECK` o `enum` en Postgres.
 - Asegurar `utf8mb4` → `UTF8` en Postgres.
 
-5) Actualizar `DATABASE_URL` en `backend/.env` (ejemplo):
+5) Actualizar `DATABASE_URL` en `backend/.env` con la URL de Supabase (ejemplo):
 
-    DATABASE_URL="postgresql://pguser:pgpass@localhost:5432/apphiper?schema=public"
+    DATABASE_URL="postgresql://postgres:password@db.xxx.supabase.co:5432/postgres?schema=public"
     JWT_SECRET=your_jwt_secret_here
 
 6) Ejecutar migraciones Prisma
