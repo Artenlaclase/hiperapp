@@ -12,7 +12,6 @@
     "incremental": true,
     "skipLibCheck": true
   },
-    ,
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.e2e-spec.ts"]
-  }
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.e2e-spec.ts"]
+}
