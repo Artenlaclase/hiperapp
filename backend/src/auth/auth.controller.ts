@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseGuards, Res } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards, Res, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -13,7 +13,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() dto: RegisterDto) {
     const existing = await this.usersService.findByEmail(dto.email);
-    if (existing) return { error: 'Email already registered' };
+    if (existing) throw new ConflictException('Email already registered');
     const user = await this.usersService.createUser(dto as any);
     return { id: user.id, email: user.email, name: user.name };
   }
@@ -21,9 +21,9 @@ export class AuthController {
   @Post('login')
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const user = await this.usersService.findByEmail(dto.email);
-    if (!user) return { error: 'Invalid credentials' };
+    if (!user) throw new UnauthorizedException('Invalid credentials');
     const valid = await this.authService.validateUser(dto.email, dto.password);
-    if (!valid) return { error: 'Invalid credentials' };
+    if (!valid) throw new UnauthorizedException('Invalid credentials');
     const tokens = await this.authService.login(user);
     // Set refresh token as httpOnly cookie; access token returned in body
     res.cookie('refreshToken', tokens.refreshToken, {

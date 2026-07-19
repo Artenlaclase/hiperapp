@@ -38,19 +38,25 @@ export default function Home() {
       const data = await response.json()
 
       if (!response.ok) {
-        setMessage(data.error || 'Error en la petición')
+        setMessage(data.error || data.message || 'Error en la petición')
       } else if (mode === 'login') {
         if (data.accessToken) {
           setAccessToken(data.accessToken)
           const payload = decodeJwt(data.accessToken)
           if (payload?.sub) setUserId(payload.sub)
           setUserName(form.name || payload?.name || payload?.email || '')
+          router.push('/dashboard')
+        } else {
+          setMessage(data.error || data.message || 'Error en la petición')
         }
-        router.push('/dashboard')
       } else {
-        setMessage('Usuario registrado. Inicia sesión.')
-        setMode('login')
-        setForm(initialForm)
+        if (data.error) {
+          setMessage(data.error || data.message || 'Error en el registro')
+        } else {
+          setMessage('Usuario registrado. Inicia sesión.')
+          setMode('login')
+          setForm(initialForm)
+        }
       }
     } catch (error) {
       console.error(error)

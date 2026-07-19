@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   let lastErr
   for (const base of BACKEND_URLS) {
     try {
-      const backendRes = await fetch(`${base}/${path}`, { method, headers, body })
+      const backendRes = await fetch(`${base}/api/${path}`, { method, headers, body })
       const data = await backendRes.text()
       res.status(backendRes.status)
       for (const [k, v] of backendRes.headers.entries()) {
